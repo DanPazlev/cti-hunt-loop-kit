@@ -1,0 +1,28 @@
+// HL-0001 — Encoded PowerShell & Download Cradles (ATT&CK T1059.001, T1027, T1105)
+// Platform: Microsoft Defender XDR Advanced Hunting / Microsoft Sentinel (DeviceProcessEvents)
+// Playbook: playbooks/HL-0001-T1059.001-encoded-powershell.md
+// Note: in Sentinel, replace Timestamp with TimeGenerated.
+let lookback = 14d;
+let encodedPattern = @"(?i)\s[-/]e(c|n[a-z]*)?\s+([A-Za-z0-9+/=]{20,})";
+let cradleKeywords = dynamic(["DownloadString", "DownloadFile", "DownloadData", "Net.WebClient",
+    "Invoke-WebRequest", "Start-BitsTransfer", "FromBase64String", "Invoke-Expression", "IEX(", "IEX ("]);
+DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| where FileName in~ ("powershell.exe", "pwsh.exe", "powershell_ise.exe")
+| extend EncodedBlob = extract(encodedPattern, 2, ProcessCommandLine)
+| extend HasEncoded = isnotempty(EncodedBlob),
+         HasCradle  = ProcessCommandLine has_any (cradleKeywords)
+| where HasEncoded or HasCradle
+// Best-effort decode: -EncodedCommand is Base64 over UTF-16LE, so strip the null bytes
+| extend Decoded = iff(HasEncoded, replace_string(base64_decode_tostring(EncodedBlob), "\u0000", ""), "")
+| summarize
+    Hits      = count(),
+    Hosts     = dcount(DeviceName),
+    FirstSeen = min(Timestamp),
+    LastSeen  = max(Timestamp),
+    SampleCommandLine = any(ProcessCommandLine),
+    SampleDecoded     = any(Decoded),
+    DeviceList        = make_set(DeviceName, 25)
+    by InitiatingProcessFileName, AccountName, HasEncoded, HasCradle
+// Rare parent / account combinations first — these are the best leads
+| order by Hits asc, Hosts asc
