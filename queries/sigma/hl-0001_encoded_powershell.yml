@@ -1,0 +1,57 @@
+title: HL-0001 Encoded PowerShell Command or Download Cradle
+id: 25976092-f72c-420c-a8f0-aaa50e107221
+status: experimental
+description: |
+    Hunt query for the CTI Hunt Loop Kit (playbook HL-0001). Detects PowerShell launched with
+    an encoded command argument or common download-cradle keywords. Intended for hunting first;
+    tune exclusions for management agents and admin scripts before promoting to a detection.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://github.com/DanPazlev/cti-hunt-loop-kit/blob/main/playbooks/HL-0001-T1059.001-encoded-powershell.md
+author: Dan Sorensen
+date: 2026-10-28
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense-evasion
+    - attack.t1027
+    - attack.command-and-control
+    - attack.t1105
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        - Image|endswith:
+              - '\powershell.exe'
+              - '\pwsh.exe'
+              - '\powershell_ise.exe'
+        - OriginalFileName:
+              - 'PowerShell.EXE'
+              - 'pwsh.dll'
+    selection_encoded:
+        CommandLine|contains|windash:
+            - ' -e '
+            - ' -ec '
+            - ' -en '
+            - ' -enc '
+            - ' -enco'
+            - ' -encodedcommand '
+    selection_cradle:
+        CommandLine|contains:
+            - 'DownloadString'
+            - 'DownloadFile'
+            - 'DownloadData'
+            - 'Net.WebClient'
+            - 'Invoke-WebRequest'
+            - 'Start-BitsTransfer'
+            - 'FromBase64String'
+            - 'Invoke-Expression'
+            - 'IEX('
+            - 'IEX ('
+    condition: selection_img and (selection_encoded or selection_cradle)
+falsepositives:
+    - Software deployment and RMM agents (SCCM, Intune, third-party RMM)
+    - Vendor installers and updaters
+    - Administrative scripts and scheduled tasks
+level: medium
