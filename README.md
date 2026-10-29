@@ -39,13 +39,13 @@ cti-hunt-loop-kit/
 │   ├── sigma/          # Platform-agnostic rules
 │   ├── kql/            # Microsoft Sentinel / Defender XDR
 │   └── spl/            # Splunk
-├── detections/         # Hunts promoted to production detections
-├── data/               # Synthetic sample datasets for workshop labs
-├── workshop/           # Lab guide, exercises, facilitator notes
-└── metrics/            # Hunt program KPIs and tracking sheet
+├── detections/         # (coming soon) Hunts promoted to production detections
+├── data/               # (coming soon) Synthetic sample datasets for workshop labs
+├── workshop/           # (coming soon) Attendee lab guide and exercises
+└── metrics/            # (coming soon) Hunt program KPIs and tracking sheet
 ```
 
-> **Status:** Work in progress. Folders are being populated ahead of the workshop; see the roadmap below.
+> **Status:** v0.1. Templates, playbook HL-0001 and its Sigma/KQL/SPL queries are available now; folders marked "coming soon" are being built. See the roadmap below.
 
 ## Quick start
 
@@ -55,7 +55,7 @@ cti-hunt-loop-kit/
    cd cti-hunt-loop-kit
    ```
 2. **Pick a priority intelligence requirement (PIR)** using `templates/pir-worksheet.md`.
-3. **Write a hypothesis card** for one ATT&CK technique tied to that PIR.
+3. **Write a hypothesis card** (see [playbooks/](playbooks/) for a worked example) for one ATT&CK technique tied to that PIR.
 4. **Run the matching query** from `queries/` against your platform (or the synthetic data in `data/`).
 5. **Record the outcome** in `templates/hunt-report.md`, then complete `templates/intel-feedback.md` so the loop closes.
 
@@ -88,11 +88,11 @@ Suggested hunt program metrics (tracked in `metrics/`):
 
 ## Roadmap
 
-- [ ] Core templates (PIR, hypothesis card, hunt report, intel feedback)
-- [ ] First 10 ATT&CK-mapped playbooks with Sigma, KQL, and SPL
+- [x] Core templates (PIR, hypothesis card, hunt report, intel feedback)
+- [x] First playbook: HL-0001 encoded PowerShell and download cradles (Sigma, KQL, SPL)
+- [ ] Nine more ATT&CK-mapped playbooks with Sigma, KQL, and SPL
 - [ ] Synthetic lab dataset and workshop exercises
 - [ ] Hunt metrics tracker
-- [ ] Facilitator guide
 
 ## Contributing
 
