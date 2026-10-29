@@ -1,0 +1,37 @@
+name: Query bug
+description: A Sigma, KQL, or SPL query errors, misses known activity, or behaves unexpectedly
+title: "[Query bug] <query file>"
+labels: ["bug", "query"]
+body:
+  - type: markdown
+    attributes:
+      value: Please share only **TLP:CLEAR** information. Redact hostnames, usernames, and IPs from your environment.
+  - type: input
+    id: file
+    attributes:
+      label: Query file
+      placeholder: queries/kql/hl-0001_encoded_powershell.kql
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options: [Microsoft Defender XDR, Microsoft Sentinel, Azure Data Explorer, Splunk, "Sigma conversion (other backend)", Other]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Error message, unexpected results, or missed activity.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+  - type: input
+    id: version
+    attributes:
+      label: Platform / tool version (if known)

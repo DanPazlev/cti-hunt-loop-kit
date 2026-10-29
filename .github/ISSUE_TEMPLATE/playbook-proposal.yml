@@ -1,0 +1,44 @@
+name: Playbook proposal
+description: Suggest a new ATT&CK-mapped hunt playbook
+title: "[Playbook] <technique ID> <short name>"
+labels: ["playbook"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a hunt! Please share only **TLP:CLEAR** information. Do not include customer data, internal hostnames, or restricted IOCs.
+  - type: input
+    id: technique
+    attributes:
+      label: ATT&CK technique(s)
+      placeholder: "e.g., T1003.001 OS Credential Dumping: LSASS Memory"
+    validations:
+      required: true
+  - type: textarea
+    id: intel
+    attributes:
+      label: Intelligence basis
+      description: Public reports, advisories, or observed tradecraft that make this hunt worth doing (links welcome).
+    validations:
+      required: true
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Draft hypothesis
+      placeholder: "If <adversary> is active, we expect to see <observable> in <data source> during <window>."
+  - type: checkboxes
+    id: data
+    attributes:
+      label: Data sources needed
+      options:
+        - label: Process creation (Sysmon 1 / 4688 / EDR)
+        - label: PowerShell script block logging (4104)
+        - label: Authentication / Kerberos
+        - label: Network, proxy, or DNS
+        - label: Cloud audit logs
+  - type: dropdown
+    id: queries
+    attributes:
+      label: Can you contribute queries?
+      multiple: true
+      options: [Sigma, KQL, SPL, "Not yet"]

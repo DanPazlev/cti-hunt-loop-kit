@@ -1,0 +1,31 @@
+name: False positive report
+description: Benign activity that a hunt query or detection flags
+title: "[False positive] <query file>: <benign source>"
+labels: ["false-positive"]
+body:
+  - type: markdown
+    attributes:
+      value: These reports improve the "known benign" sections of each playbook. Please redact anything specific to your environment.
+  - type: input
+    id: file
+    attributes:
+      label: Query or rule file
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Benign source
+      description: Software, agent, or admin process that triggered it (vendor and product name if public).
+    validations:
+      required: true
+  - type: textarea
+    id: pattern
+    attributes:
+      label: How to recognize it
+      description: Parent process, account context, command-line pattern (redacted), signing, schedule.
+  - type: textarea
+    id: exclusion
+    attributes:
+      label: Suggested scoped exclusion
+      description: Keep it narrow. Avoid blanket exclusions such as all of powershell.exe.
